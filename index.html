@@ -700,8 +700,14 @@
       <!-- Copyright -->
       <div class="footer-bottom">
         <div class="footer-bottom-content">
-          <p>&copy; 2025 DS Projetos e Construções LTDA. Todos os direitos reservados.</p>
-          <p>CNPJ: 56.225.981/0001-20</p>
+          <div class="footer-copyright-info">
+            <p>&copy; 2025 DS Projetos e Construções LTDA. Todos os direitos reservados.</p>
+            <p>CNPJ: 56.225.981/0001-20</p>
+          </div>
+          <button class="developer-button" id="developer-button">
+            <i class="fa-solid fa-code"></i>
+            Desenvolvedor
+          </button>
         </div>
       </div>
     </div>
@@ -718,6 +724,21 @@
       </div>
     </div>
   </div>
+
+  <!-- Scroll Arrows -->
+  <div class="scroll-arrows" id="scroll-arrows">
+    <button class="scroll-arrow scroll-arrow-up" id="scroll-up" aria-label="Subir para o topo">
+      <i class="fa-solid fa-chevron-up"></i>
+    </button>
+    <button class="scroll-arrow scroll-arrow-down" id="scroll-down" aria-label="Descer para baixo">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+  </div>
+
+  <!-- Footer CTA - Luan Cardoso -->
+  <link rel="stylesheet" href="footer-cta.css">
+  <div id="footer-cta-root"></div>
+  <script src="footer-cta.js" defer></script>
 
   <!-- Scripts (tipo módulo) -->
   <script type="module" src="index.js"></script>

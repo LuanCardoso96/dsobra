@@ -297,30 +297,51 @@ document.addEventListener('DOMContentLoaded', function() {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const nav = document.querySelector('.nav');
   
+  // Função para fechar o menu mobile
+  function closeMobileMenu() {
+    nav.classList.remove('mobile-open');
+  }
+  
+  // Função para abrir o menu mobile
+  function openMobileMenu() {
+    nav.classList.add('mobile-open');
+  }
+  
   mobileMenuBtn?.addEventListener('click', function() {
-    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-    
-    // Ajustar estilo do menu mobile
-    if (nav.style.display === 'flex') {
-      nav.style.position = 'absolute';
-      nav.style.top = '100%';
-      nav.style.left = '0';
-      nav.style.right = '0';
-      nav.style.background = 'rgba(255,255,255,.98)';
-      nav.style.flexDirection = 'column';
-      nav.style.padding = '20px';
-      nav.style.boxShadow = '0 4px 20px rgba(0,0,0,.1)';
-      nav.style.borderTop = '1px solid rgba(0,0,0,.1)';
-      nav.style.zIndex = '100';
-      
-      // Ajustar links do menu mobile
-      const navLinks = nav.querySelectorAll('a');
-      navLinks.forEach(link => {
-        link.style.margin = '8px 0';
-        link.style.padding = '12px 16px';
-        link.style.textAlign = 'center';
-        link.style.borderRadius = '8px';
-      });
+    if (nav.classList.contains('mobile-open')) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+  
+  // Fechar menu mobile ao clicar nos links de navegação
+  const navLinks = nav.querySelectorAll('a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      // Verificar se é um link âncora (começa com #)
+      if (this.getAttribute('href').startsWith('#')) {
+        closeMobileMenu();
+        
+        // Scroll suave para a seção
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          setTimeout(() => {
+            targetElement.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }, 100);
+        }
+      }
+    });
+  });
+  
+  // Fechar menu mobile ao clicar fora dele
+  document.addEventListener('click', function(e) {
+    if (!nav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+      closeMobileMenu();
     }
   });
   
@@ -410,4 +431,86 @@ document.addEventListener('DOMContentLoaded', function() {
       todasVisiveisAlvenaria = false;
     }
   });
+});
+
+// Scroll Arrows - Setas de navegação
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollArrows = document.getElementById('scroll-arrows');
+  const scrollUp = document.getElementById('scroll-up');
+  const scrollDown = document.getElementById('scroll-down');
+  
+  // Função para mostrar/ocultar setas baseado na posição do scroll
+  function toggleScrollArrows() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    // Mostrar setas apenas se houver scroll suficiente
+    if (documentHeight > windowHeight + 100) {
+      scrollArrows.classList.add('visible');
+      
+      // Ocultar seta para cima no topo
+      if (scrollTop < 100) {
+        scrollUp.style.opacity = '0.5';
+        scrollUp.style.pointerEvents = 'none';
+      } else {
+        scrollUp.style.opacity = '1';
+        scrollUp.style.pointerEvents = 'auto';
+      }
+      
+      // Ocultar seta para baixo no final
+      if (scrollTop + windowHeight >= documentHeight - 100) {
+        scrollDown.style.opacity = '0.5';
+        scrollDown.style.pointerEvents = 'none';
+      } else {
+        scrollDown.style.opacity = '1';
+        scrollDown.style.pointerEvents = 'auto';
+      }
+    } else {
+      scrollArrows.classList.remove('visible');
+    }
+  }
+  
+  // Função de scroll suave
+  function smoothScrollTo(targetY, duration = 800) {
+    const startY = window.pageYOffset;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+    
+    function animation(currentTime) {
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      
+      // Easing function (easeInOutCubic)
+      const ease = progress < 0.5 
+        ? 4 * progress * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      
+      window.scrollTo(0, startY + distance * ease);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animation);
+      }
+    }
+    
+    requestAnimationFrame(animation);
+  }
+  
+  // Event listeners
+  scrollUp.addEventListener('click', function() {
+    smoothScrollTo(0);
+  });
+  
+  scrollDown.addEventListener('click', function() {
+    const documentHeight = document.documentElement.scrollHeight;
+    const windowHeight = window.innerHeight;
+    smoothScrollTo(documentHeight - windowHeight);
+  });
+  
+  // Mostrar/ocultar setas baseado no scroll
+  window.addEventListener('scroll', toggleScrollArrows);
+  window.addEventListener('resize', toggleScrollArrows);
+  
+  // Verificar estado inicial
+  toggleScrollArrows();
 });
