@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalhe Conosco - DS Engenharia</title>
+    <meta name="description" content="Faça parte da DS Engenharia. Envie seu currículo e candidate-se às nossas vagas.">
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+        
+        // CONFIGURAÇÃO DO FIREBASE - PREENCHA COM SUAS CREDENCIAIS
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyAbPd9nBarQ0zvFz5OikteT6oeUrDpHQMw",
+            authDomain: "ds-engenharia-84e9b.firebaseapp.com",
+            projectId: "ds-engenharia-84e9b",
+            storageBucket: "ds-engenharia-84e9b.appspot.com",
+            appId: "1:706301154499:web:YOUR_APP_ID"
+        };
+        
+        // Coleção e pasta (mantê-las exatamente assim)
+        const FIRESTORE_COLLECTION = "sites-curriculo";
+        const STORAGE_FOLDER = "curriculos";
+        
+        // Inicializar Firebase
+        const app = initializeApp(FIREBASE_CONFIG);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        
+        // Lista de vagas disponíveis
+        const VAGAS = [
+            "Auxiliar de Obras",
+            "Mestre de Obras", 
+            "Pedreiro",
+            "Eletricista Predial",
+            "Encarregado de Obras",
+            "Engenheiro Civil",
+            "Técnico de Segurança do Trabalho",
+            "Instalador de Solar",
+            "Pintor",
+            "Azulejista",
+            "Estágio em Engenharia"
+        ];
+        
+        // Tornar variáveis globais para uso no HTML
+        window.VAGAS = VAGAS;
+        window.db = db;
+        window.storage = storage;
+        window.FIRESTORE_COLLECTION = FIRESTORE_COLLECTION;
+        window.STORAGE_FOLDER = STORAGE_FOLDER;
+        window.serverTimestamp = serverTimestamp;
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.ref = ref;
+        window.uploadBytesResumable = uploadBytesResumable;
+        window.getDownloadURL = getDownloadURL;
+    </script>
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "JobPosting",
+        "title": "Vagas DS Engenharia",
+        "description": "Faça parte da DS Engenharia. Segurança, qualidade e crescimento constante.",
+        "hiringOrganization": {
+            "@type": "Organization",
+            "name": "DS Engenharia"
+        },
+        "jobLocation": {
+            "@type": "Place",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "BR"
+            }
+        }
+    }
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #F6F7FB;
+            color: #0F172A;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0EA5E9;
+            text-decoration: none;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav a {
+            color: #0F172A;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav a:hover, .nav a.active {
+            color: #0EA5E9;
+        }
+        
+        .vaga-select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #E2E8F0;
+            border-radius: 0.5rem;
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .vaga-select:hover {
+            border-color: #0EA5E9;
+        }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Main Content */
+        .main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #0EA5E9;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+        
+        .back-link:hover {
+            color: #0284C7;
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 3rem;
+        }
+        
+        .form-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #0F172A;
+        }
+        
+        .form-subtitle {
+            color: #64748B;
+            margin-bottom: 2rem;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #0F172A;
+        }
+        
+        .required {
+            color: #EF4444;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #E2E8F0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #0EA5E9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+        
+        .form-input[aria-invalid="true"], .form-select[aria-invalid="true"], .form-textarea[aria-invalid="true"] {
+            border-color: #EF4444;
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-error {
+            color: #EF4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-error.show {
+            display: block;
+        }
+        
+        /* File Upload */
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 2px dashed #CBD5E1;
+            border-radius: 0.5rem;
+            background: #F8FAFC;
+            transition: border-color 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+        
+        .file-upload:hover .file-label {
+            border-color: #0EA5E9;
+            background: #F0F9FF;
+        }
+        
+        .file-icon {
+            color: #64748B;
+            font-size: 1.25rem;
+        }
+        
+        .file-text {
+            color: #64748B;
+        }
+        
+        .file-info {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+        
+        .file-progress {
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E2E8F0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #0EA5E9;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .progress-text {
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+        
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .checkbox-input {
+            margin-top: 0.25rem;
+        }
+        
+        .checkbox-label {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .checkbox-label a {
+            color: #0EA5E9;
+            text-decoration: none;
+        }
+        
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Submit Button */
+        .submit-btn {
+            background: #0EA5E9;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover:not(:disabled) {
+            background: #0284C7;
+            transform: translateY(-1px);
+        }
+        
+        .submit-btn:disabled {
+            background: #94A3B8;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+        
+        .toast {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            border-left: 4px solid #10B981;
+        }
+        
+        .toast.error {
+            border-left: 4px solid #EF4444;
+        }
+        
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+        
+        .toast.success .toast-icon {
+            color: #10B981;
+        }
+        
+        .toast.error .toast-icon {
+            color: #EF4444;
+        }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .toast-message {
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            font-size: 1.25rem;
+            padding: 0;
+        }
+        
+        /* FAQ */
+        .faq {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .faq-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #0F172A;
+        }
+        
+        .faq-item {
+            margin-bottom: 1rem;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #0F172A;
+        }
+        
+        .faq-answer {
+            color: #64748B;
+            font-size: 0.9rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #0F172A;
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .footer-text {
+            margin-bottom: 1.5rem;
+            color: #94A3B8;
+        }
+        
+        .footer-contacts {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #0EA5E9;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .contact-btn:hover {
+            background: #0284C7;
+        }
+        
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .main {
+                padding: 2rem 1rem;
+            }
+            
+            .form-card {
+                padding: 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-contacts {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .toast-container {
+                right: 1rem;
+                left: 1rem;
+            }
+            
+            .toast {
+                max-width: none;
+            }
+        }
+        
+        /* Honeypot */
+        .honeypot {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+        }
+        
+        /* LGPD Details */
+        .lgpd-details {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+        
+        .lgpd-details summary {
+            cursor: pointer;
+            color: #0EA5E9;
+        }
+        
+        .lgpd-details summary:hover {
+            text-decoration: underline;
+        }
+        
+        .lgpd-content {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: #F8FAFC;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">DS Engenharia</a>
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="rh.html" class="active">Trabalhe Conosco</a>
+                <select class="vaga-select" id="vaga-header-select" onchange="redirectToVaga(this.value)">
+                    <option value="">Selecione uma vaga</option>
+                </select>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Trabalhe Conosco</h1>
+        <p>Faça parte da DS Engenharia. Segurança, qualidade e crescimento constante.</p>
+    </section>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <a href="index.html" class="back-link">
+            ← Voltar para a Home
+        </a>
+        
+        <!-- Form Card -->
+        <div class="form-card">
+            <h2 class="form-title">Candidatura</h2>
+            <p class="form-subtitle">Preencha o formulário abaixo para se candidatar às nossas vagas</p>
+            
+            <form id="candidaturaForm" novalidate>
+                <!-- Honeypot -->
+                <input type="text" name="website" class="honeypot" tabindex="-1" autocomplete="off">
+                
+                <div class="form-group">
+                    <label for="vaga" class="form-label">
+                        Vaga desejada <span class="required">*</span>
+                    </label>
+                    <select id="vaga" name="vaga" class="form-select" required aria-invalid="false">
+                        <option value="">Selecione uma vaga</option>
+                    </select>
+                    <div class="form-error" id="vaga-error">Por favor, selecione uma vaga</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tipoContratacao" class="form-label">
+                        Tipo de contratação
+                    </label>
+                    <select id="tipoContratacao" name="tipoContratacao" class="form-select">
+                        <option value="">Selecione</option>
+                        <option value="CLT">CLT</option>
+                        <option value="PJ">PJ</option>
+                        <option value="Estágio">Estágio</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome" class="form-label">
+                            Nome completo <span class="required">*</span>
+                        </label>
+                        <input type="text" id="nome" name="nome" class="form-input" required 
+                               aria-invalid="false" autocomplete="name">
+                        <div class="form-error" id="nome-error">Por favor, informe seu nome completo</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            E-mail <span class="required">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" class="form-input" required 
+                               aria-invalid="false" autocomplete="email">
+                        <div class="form-error" id="email-error">Por favor, informe um e-mail válido</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="telefone" class="form-label">
+                            Telefone/WhatsApp <span class="required">*</span>
+                        </label>
+                        <input type="tel" id="telefone" name="telefone" class="form-input" required 
+                               aria-invalid="false" autocomplete="tel" placeholder="(11) 99999-9999">
+                        <div class="form-error" id="telefone-error">Por favor, informe um telefone válido</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cidade" class="form-label">
+                            Cidade / UF <span class="required">*</span>
+                        </label>
+                        <input type="text" id="cidade" name="cidade" class="form-input" required 
+                               aria-invalid="false" autocomplete="address-level2" placeholder="São Paulo / SP">
+                        <div class="form-error" id="cidade-error">Por favor, informe sua cidade e UF</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pretensao" class="form-label">
+                            Pretensão salarial
+                        </label>
+                        <input type="number" id="pretensao" name="pretensao" class="form-input" 
+                               placeholder="4500" min="0" step="100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="disponibilidade" class="form-label">
+                            Disponibilidade
+                        </label>
+                        <select id="disponibilidade" name="disponibilidade" class="form-select">
+                            <option value="">Selecione</option>
+                            <option value="Imediata">Imediata</option>
+                            <option value="15 dias">15 dias</option>
+                            <option value="30 dias">30 dias</option>
+                            <option value="60 dias">60 dias</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="linkedin" class="form-label">
+                            LinkedIn
+                        </label>
+                        <input type="url" id="linkedin" name="linkedin" class="form-input" 
+                               placeholder="https://linkedin.com/in/seu-perfil">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="portfolio" class="form-label">
+                            Portfólio/Website
+                        </label>
+                        <input type="url" id="portfolio" name="portfolio" class="form-input" 
+                               placeholder="https://seusite.com.br">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mensagem" class="form-label">
+                        Mensagem
+                    </label>
+                    <textarea id="mensagem" name="mensagem" class="form-textarea" 
+                              placeholder="Conte-nos um pouco sobre você, suas experiências e motivações..." 
+                              maxlength="800" aria-describedby="mensagem-counter"></textarea>
+                    <div id="mensagem-counter" style="text-align: right; font-size: 0.75rem; color: #64748B; margin-top: 0.25rem;">
+                        0/800 caracteres
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Anexo (Currículo)
+                    </label>
+                    <div class="file-upload">
+                        <input type="file" id="arquivo" name="arquivo" class="file-input" 
+                               accept=".pdf,.doc,.docx" onchange="handleFileSelect(this)">
+                        <label for="arquivo" class="file-label">
+                            <span class="file-icon">📎</span>
+                            <span class="file-text">Clique para selecionar ou arraste seu currículo aqui</span>
+                        </label>
+                    </div>
+                    <div class="file-info" id="fileInfo"></div>
+                    <div class="file-progress" id="fileProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">0%</div>
+                    </div>
+                    <div class="form-error" id="arquivo-error"></div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="lgpd" name="lgpd" class="checkbox-input" required>
+                        <label for="lgpd" class="checkbox-label">
+                            <span class="required">*</span> Autorizo o tratamento dos meus dados para fins de recrutamento.
+                            <details class="lgpd-details">
+                                <summary>Ver política de privacidade</summary>
+                                <div class="lgpd-content">
+                                    <p><strong>Política de Privacidade LGPD</strong></p>
+                                    <p>Os dados coletados neste formulário serão utilizados exclusivamente para fins de recrutamento e seleção de candidatos. Seus dados serão armazenados de forma segura e não serão compartilhados com terceiros sem seu consentimento.</p>
+                                    <p>Você tem o direito de solicitar a exclusão dos seus dados a qualquer momento através do e-mail de contato.</p>
+                                </div>
+                            </details>
+                        </label>
+                    </div>
+                    <div class="form-error" id="lgpd-error">É necessário autorizar o tratamento dos dados</div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Enviar candidatura
+                </button>
+            </form>
+        </div>
+        
+        <!-- FAQ -->
+        <div class="faq">
+            <h3 class="faq-title">Perguntas Frequentes</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question">Como funciona o processo seletivo?</div>
+                <div class="faq-answer">Após recebermos seu currículo, nossa equipe de RH fará uma análise inicial. Os candidatos selecionados serão contatados para entrevistas e testes práticos quando necessário.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Onde posso ver todas as vagas disponíveis?</div>
+                <div class="faq-answer">Todas as vagas estão listadas no formulário acima. Você também pode usar os seletores no cabeçalho e rodapé para navegar diretamente para uma vaga específica.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Posso me candidatar sem especificar uma vaga?</div>
+                <div class="faq-answer">Sim! Se você não encontrar uma vaga específica, pode selecionar "Outros" e descrever seu perfil na mensagem. Analisaremos seu currículo para oportunidades futuras.</div>
+            </div>
+        </div>
+        
+        <!-- Download Modelo -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="#" style="color: #0EA5E9; text-decoration: none; font-weight: 500;">
+                📄 Baixar modelo de currículo (DOCX)
+            </a>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                Dúvidas? Fale com Luan Cardoso – Desenvolvedor Mobile, Criador de Sites e Tráfego Pago
+            </p>
+            
+            <div class="footer-contacts">
+                <a href="https://wa.me/5511960990726?text=Ol%C3%A1%20Luan!%20Vim%20do%20site." 
+                   class="contact-btn" target="_blank" rel="noopener">
+                    📱 WhatsApp
+                </a>
+                <a href="tel:+5511960990726" class="contact-btn">
+                    📞 Telefone
+                </a>
+            </div>
+            
+        </div>
+    </footer>
+    
+    <script>
+        // Utilitários
+        function slugify(text) {
+            return text.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/[\s_-]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+        }
+        
+        function formatPhone(value) {
+            const numbers = value.replace(/\D/g, '');
+            if (numbers.length <= 10) {
+                return numbers.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            } else {
+                return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+        }
+        
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✅' : '❌';
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Show toast
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+        
+        function redirectToVaga(vaga) {
+            if (vaga) {
+                const slug = slugify(vaga);
+                window.location.href = `rh.html?vaga=${encodeURIComponent(slug)}`;
+            }
+        }
+        
+        function populateVagaSelects() {
+            const selects = ['vaga', 'vaga-header-select'];
+            
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    // Clear existing options except first
+                    select.innerHTML = '<option value="">Selecione uma vaga</option>';
+                    
+                    // Add vaga options
+                    window.VAGAS.forEach(vaga => {
+                        const option = document.createElement('option');
+                        option.value = vaga;
+                        option.textContent = vaga;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+        
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            const fileInfo = document.getElementById('fileInfo');
+            const fileError = document.getElementById('arquivo-error');
+            
+            if (file) {
+                // Validate file type
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    fileError.textContent = 'Apenas arquivos PDF, DOC e DOCX são aceitos';
+                    fileError.classList.add('show');
+                    input.value = '';
+                    return;
+                }
+                
+                // Validate file size (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    fileError.textContent = 'Arquivo muito grande. Máximo 10MB';
+                    fileError.classList.add('show');
+                    input.value = '';
+                    return;
+                }
+                
+                // Clear errors
+                fileError.classList.remove('show');
+                
+                // Show file info
+                const sizeKB = Math.round(file.size / 1024);
+                fileInfo.innerHTML = `
+                    <strong>Arquivo selecionado:</strong> ${file.name}<br>
+                    <strong>Tamanho:</strong> ${sizeKB} KB
+                `;
+            } else {
+                fileInfo.innerHTML = '';
+            }
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('.form-error').forEach(error => {
+                error.classList.remove('show');
+            });
+            
+            document.querySelectorAll('[aria-invalid]').forEach(input => {
+                input.setAttribute('aria-invalid', 'false');
+            });
+            
+            // Required fields validation
+            const requiredFields = [
+                { id: 'vaga', message: 'Por favor, selecione uma vaga' },
+                { id: 'nome', message: 'Por favor, informe seu nome completo' },
+                { id: 'email', message: 'Por favor, informe um e-mail válido' },
+                { id: 'telefone', message: 'Por favor, informe um telefone válido' },
+                { id: 'cidade', message: 'Por favor, informe sua cidade e UF' }
+            ];
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field.id);
+                const error = document.getElementById(`${field.id}-error`);
+                
+                if (!input.value.trim()) {
+                    input.setAttribute('aria-invalid', 'true');
+                    error.textContent = field.message;
+                    error.classList.add('show');
+                    isValid = false;
+                }
+            });
+            
+            // Email validation
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value && !emailRegex.test(email.value)) {
+                email.setAttribute('aria-invalid', 'true');
+                document.getElementById('email-error').textContent = 'Por favor, informe um e-mail válido';
+                document.getElementById('email-error').classList.add('show');
+                isValid = false;
+            }
+            
+            // Phone validation (minimum 10 digits)
+            const telefone = document.getElementById('telefone');
+            const phoneNumbers = telefone.value.replace(/\D/g, '');
+            if (telefone.value && phoneNumbers.length < 10) {
+                telefone.setAttribute('aria-invalid', 'true');
+                document.getElementById('telefone-error').textContent = 'Por favor, informe um telefone válido (mínimo 10 dígitos)';
+                document.getElementById('telefone-error').classList.add('show');
+                isValid = false;
+            }
+            
+            // LGPD consent
+            const lgpd = document.getElementById('lgpd');
+            if (!lgpd.checked) {
+                document.getElementById('lgpd-error').classList.add('show');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        async function uploadFile(file) {
+            return new Promise((resolve, reject) => {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const timestamp = Math.floor(now.getTime() / 1000);
+                const fileName = file.name.replace(/\.[^/.]+$/, '');
+                const fileExt = file.name.split('.').pop();
+                
+                const filePath = `${window.STORAGE_FOLDER}/${year}-${month}/${timestamp}_${fileName}.${fileExt}`;
+                const storageRef = window.ref(window.storage, filePath);
+                const uploadTask = window.uploadBytesResumable(storageRef, file);
+                
+                const progressDiv = document.getElementById('fileProgress');
+                const progressFill = document.getElementById('progressFill');
+                const progressText = document.getElementById('progressText');
+                
+                progressDiv.style.display = 'block';
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        progressFill.style.width = progress + '%';
+                        progressText.textContent = Math.round(progress) + '%';
+                    },
+                    (error) => {
+                        progressDiv.style.display = 'none';
+                        reject(error);
+                    },
+                    async () => {
+                        try {
+                            const downloadURL = await window.getDownloadURL(uploadTask.snapshot.ref);
+                            progressDiv.style.display = 'none';
+                            resolve({
+                                filePath,
+                                downloadURL,
+                                fileName: file.name,
+                                fileType: file.type,
+                                fileSize: file.size
+                            });
+                        } catch (error) {
+                            progressDiv.style.display = 'none';
+                            reject(error);
+                        }
+                    }
+                );
+            });
+        }
+        
+        async function submitForm(formData) {
+            try {
+                const fileInput = document.getElementById('arquivo');
+                let fileData = null;
+                
+                // Upload file if present
+                if (fileInput.files[0]) {
+                    fileData = await uploadFile(fileInput.files[0]);
+                }
+                
+                // Prepare document data
+                const docData = {
+                    vaga: formData.get('vaga'),
+                    tipoContratacao: formData.get('tipoContratacao') || '',
+                    nome: formData.get('nome'),
+                    email: formData.get('email'),
+                    telefone: formData.get('telefone'),
+                    cidade: formData.get('cidade'),
+                    pretensao: formData.get('pretensao') ? parseFloat(formData.get('pretensao')) : null,
+                    disponibilidade: formData.get('disponibilidade') || '',
+                    linkedin: formData.get('linkedin') || '',
+                    portfolio: formData.get('portfolio') || '',
+                    mensagem: formData.get('mensagem') || '',
+                    status: 'novo',
+                    referrer: document.referrer || null,
+                    createdAt: window.serverTimestamp()
+                };
+                
+                // Add file data if uploaded
+                if (fileData) {
+                    docData.fileName = fileData.fileName;
+                    docData.fileType = fileData.fileType;
+                    docData.fileSize = fileData.fileSize;
+                    docData.filePath = fileData.filePath;
+                    docData.fileURL = fileData.downloadURL;
+                }
+                
+                // Add UTM parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                docData.utm = {
+                    source: urlParams.get('utm_source') || null,
+                    medium: urlParams.get('utm_medium') || null,
+                    campaign: urlParams.get('utm_campaign') || null
+                };
+                
+                // Save to Firestore
+                await window.addDoc(window.collection(window.db, window.FIRESTORE_COLLECTION), docData);
+                
+                return true;
+            } catch (error) {
+                console.error('Erro ao enviar formulário:', error);
+                throw error;
+            }
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate vaga selects
+            populateVagaSelects();
+            
+            // Handle URL parameter for pre-selected vaga
+            const urlParams = new URLSearchParams(window.location.search);
+            const vagaParam = urlParams.get('vaga');
+            if (vagaParam) {
+                const vagaSelect = document.getElementById('vaga');
+                const vagaOptions = Array.from(vagaSelect.options);
+                const matchingVaga = vagaOptions.find(option => 
+                    slugify(option.value) === vagaParam
+                );
+                if (matchingVaga) {
+                    vagaSelect.value = matchingVaga.value;
+                }
+            }
+            
+            // Phone mask
+            const telefoneInput = document.getElementById('telefone');
+            telefoneInput.addEventListener('input', function(e) {
+                e.target.value = formatPhone(e.target.value);
+            });
+            
+            // Character counter for message
+            const mensagemInput = document.getElementById('mensagem');
+            const mensagemCounter = document.getElementById('mensagem-counter');
+            mensagemInput.addEventListener('input', function() {
+                const count = this.value.length;
+                mensagemCounter.textContent = `${count}/800 caracteres`;
+            });
+            
+            // Form submission
+            const form = document.getElementById('candidaturaForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Check honeypot
+                const honeypot = form.querySelector('input[name="website"]');
+                if (honeypot.value) {
+                    console.log('Honeypot triggered - spam attempt');
+                    return;
+                }
+                
+                // Validate form
+                if (!validateForm()) {
+                    showToast('error', 'Erro na validação', 'Por favor, corrija os erros no formulário');
+                    return;
+                }
+                
+                // Disable submit button
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Enviando...';
+                
+                try {
+                    const formData = new FormData(form);
+                    await submitForm(formData);
+                    
+                    // Success
+                    showToast('success', 'Sucesso!', 'Recebemos seu currículo! Obrigado por se candidatar.');
+                    
+                    // Clear form but keep vaga selected
+                    const selectedVaga = formData.get('vaga');
+                    form.reset();
+                    document.getElementById('vaga').value = selectedVaga;
+                    document.getElementById('fileInfo').innerHTML = '';
+                    document.getElementById('fileProgress').style.display = 'none';
+                    
+                } catch (error) {
+                    showToast('error', 'Erro', 'Não foi possível enviar. Tente novamente.');
+                } finally {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Enviar candidatura';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
