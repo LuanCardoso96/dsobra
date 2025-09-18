@@ -1,32 +1,92 @@
-// ===== Three.js (estrutura 3D) =====
+// ===== Three.js: PAREDE SENDO CONSTRUÍDA (MELHORADA) =====
 import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
 const canvas = document.getElementById('three-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 100);
-camera.position.set(0, 0.8, 3.2);
+camera.position.set(0.8, 0.8, 3.2);
 
-const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
-light1.position.set(2, 3, 2);
-scene.add(light1);
-scene.add(new THREE.AmbientLight(0x88a099, 0.6));
+const envLight = new THREE.AmbientLight(0x98a7a1, 0.75);
+scene.add(envLight);
+const keyLight = new THREE.DirectionalLight(0xffffff, 1.25);
+keyLight.position.set(2.5, 3.5, 2.2);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.width = 2048;
+keyLight.shadow.mapSize.height = 2048;
+scene.add(keyLight);
 
-// Torus-knot “estrutura”
-const geo = new THREE.TorusKnotGeometry(0.9, 0.22, 180, 24, 2, 3);
-const mat = new THREE.MeshStandardMaterial({
-  color: 0x49b87a, metalness: 0.35, roughness: 0.25,
-  emissive: 0x062b1b, emissiveIntensity: 0.15
-});
-const mesh = new THREE.Mesh(geo, mat);
-scene.add(mesh);
-
-// wireframe sutil
-const wire = new THREE.LineSegments(
-  new THREE.WireframeGeometry(geo),
-  new THREE.LineBasicMaterial({ transparent: true, opacity: 0.15 })
+// "chão" estilo canteiro
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(8, 4),
+  new THREE.MeshStandardMaterial({ color: 0x0d1713, metalness: 0.1, roughness: 0.9 })
 );
-mesh.add(wire);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.02;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// parametros da parede
+const BRICK_W = 0.30;
+const BRICK_H = 0.12;
+const BRICK_D = 0.14;
+const COLS = 16;       // quantos tijolos por linha
+const ROWS = 8;        // quantas fiadas
+const GAP  = 0.012;    // "argamassa"
+const OFFSET_ROW = BRICK_W * 0.5; // amarração (meio tijolo)
+
+const bricks = [];
+const brickGeo = new THREE.BoxGeometry(BRICK_W, BRICK_H, BRICK_D);
+const brickMat = new THREE.MeshStandardMaterial({
+  color: 0x3a8f53, metalness: 0.15, roughness: 0.4, 
+  emissive: 0x0a2d1a, emissiveIntensity: 0.08
+});
+
+// constrói a grade de tijolos invisíveis (escala 0) e vamos "erguendo"
+function createWall() {
+  // largura total para centralizar
+  const rowWidth = COLS * (BRICK_W + GAP) - GAP;
+  const startX = -rowWidth / 2;
+
+  for (let r = 0; r < ROWS; r++) {
+    const isOffset = r % 2 === 1;
+    for (let c = 0; c < COLS; c++) {
+      // desloca meia peça em linhas alternadas
+      const x = startX + c * (BRICK_W + GAP) + (isOffset ? OFFSET_ROW : 0);
+      const y = r * (BRICK_H + GAP);
+
+      const m = new THREE.Mesh(brickGeo, brickMat);
+      m.position.set(x, y, 0);
+      m.scale.set(0.001, 0.001, 0.001); // nasce "do nada"
+      m.castShadow = true; m.receiveShadow = true;
+      scene.add(m);
+      bricks.push(m);
+    }
+  }
+}
+createWall();
+
+// timeline de construção: 1 tijolo a cada X ms
+let buildIndex = 0;
+const BUILD_EVERY_MS = 70;  // mais rápido para melhor visualização
+let lastBuild = 0;
+
+// Reiniciar construção quando a página carrega
+function resetConstruction() {
+  buildIndex = 0;
+  lastBuild = 0;
+  // Resetar todos os tijolos para invisíveis
+  bricks.forEach(brick => {
+    brick.scale.set(0.001, 0.001, 0.001);
+    brick.userData.birth = null;
+  });
+}
+
+// Reiniciar a cada 15 segundos para mostrar a animação continuamente
+setInterval(resetConstruction, 15000);
 
 // resize
 function onResize(){
@@ -39,14 +99,33 @@ window.addEventListener('resize', onResize);
 onResize();
 
 function animate(t){
-  mesh.rotation.y = t * 0.00025;
-  mesh.rotation.x = Math.sin(t * 0.00015) * 0.2;
+  // animação de "chefe de obra olhando": leve orbit
+  camera.position.x = Math.sin(t*0.00022) * 1.1 + 0.3;
+  camera.lookAt(0, ROWS*BRICK_H*0.45, 0);
+
+  // construir tijolo por tijolo
+  if (t - lastBuild > BUILD_EVERY_MS && buildIndex < bricks.length){
+    const b = bricks[buildIndex++];
+    b.userData.birth = t;
+    lastBuild = t;
+  }
+
+  // tijolos recém-criados expandem com ease-out
+  for (const b of bricks){
+    if (b.userData.birth){
+      const k = Math.min(1, (t - b.userData.birth) / 300); // 300ms de "surto"
+      const ease = 1 - Math.pow(1 - k, 3);
+      const s = THREE.MathUtils.lerp(0.001, 1, ease);
+      b.scale.set(s, s, s);
+    }
+  }
+
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
 
-// ===== Fade-in do Portfólio =====
+// ===== Fade-in Portfólio =====
 const observer = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{
     if(e.isIntersecting){ e.target.classList.add('show'); observer.unobserve(e.target); }
@@ -54,14 +133,10 @@ const observer = new IntersectionObserver((entries)=>{
 },{ threshold: 0.15 });
 document.querySelectorAll('.fade-item').forEach(el=>observer.observe(el));
 
-// ===== Firebase (Comentários) =====
+// ===== Firebase (Contato) =====
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
-import {
-  getFirestore, collection, addDoc, serverTimestamp,
-  query, orderBy, onSnapshot
-} from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js';
 
-// >>>> Suas credenciais (fornecidas por você) <<<<
 const firebaseConfig = {
   apiKey: "AIzaSyAbPd9nBarQ0zvFz5OikteT6oeUrDpHQMw",
   authDomain: "ds-engenharia-84e9b.firebaseapp.com",
@@ -70,55 +145,269 @@ const firebaseConfig = {
   messagingSenderId: "706301154499",
   appId: "1:706301154499:web:ac2d1b6e611b649fe77e76"
 };
-
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
 
-// Submit do formulário
-const form = document.getElementById('comment-form');
+const form = document.getElementById('contact-form');
 const nome = document.getElementById('nome');
-const texto = document.getElementById('texto');
+const telefone = document.getElementById('telefone');
+const email = document.getElementById('email');
+const mensagem = document.getElementById('mensagem');
 const statusEl = document.getElementById('form-status');
-const list = document.getElementById('comments-list');
 
-form.addEventListener('submit', async (e)=>{
+form?.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  statusEl.textContent = 'Enviando...';
+  statusEl.textContent = 'Enviando mensagem...';
+  
   try{
-    await addDoc(collection(db, 'comments'), {
+    await addDoc(collection(db, 'Site-mensagems'), {
       nome: nome.value.trim(),
-      texto: texto.value.trim(),
-      createdAt: serverTimestamp()
+      telefone: telefone.value.trim(),
+      email: email.value.trim(),
+      mensagem: mensagem.value.trim(),
+      createdAt: serverTimestamp(),
+      projeto: 'DS Engenharia'
     });
-    nome.value = ''; texto.value = '';
-    statusEl.textContent = 'Comentário enviado!';
-    setTimeout(()=> statusEl.textContent = '', 1500);
-  } catch(err){
-    console.error(err);
-    statusEl.textContent = 'Falha ao enviar. Tente novamente.';
+    
+    // Limpar formulário
+    nome.value = '';
+    telefone.value = '';
+    email.value = '';
+    mensagem.value = '';
+    
+    statusEl.textContent = 'Mensagem enviada com sucesso! Entraremos em contato em breve.';
+    statusEl.style.color = '#3a8f53';
+    
+    setTimeout(()=> {
+      statusEl.textContent = '';
+      statusEl.style.color = '';
+    }, 3000);
+    
+  }catch(err){
+    console.error('Erro ao enviar mensagem:', err);
+    statusEl.textContent = 'Erro ao enviar mensagem. Tente novamente ou entre em contato pelo telefone.';
+    statusEl.style.color = '#e53e3e';
+    
+    setTimeout(()=> {
+      statusEl.textContent = '';
+      statusEl.style.color = '';
+    }, 3000);
   }
 });
 
-// Stream em tempo real (ordem desc)
-const q = query(collection(db, 'comments'), orderBy('createdAt', 'desc'));
-onSnapshot(q, (snap)=>{
-  list.innerHTML = '';
-  snap.forEach(doc=>{
-    const c = doc.data();
-    const li = document.createElement('li');
-    li.innerHTML = `<strong>${escapeHtml(c.nome || 'Anônimo')}</strong><br>${escapeHtml(c.texto || '')}`;
-    list.appendChild(li);
+// ===== Mapa (Leaflet) =====
+const LAT = -23.454;  // ajuste
+const LON = -46.533;
+const map = L.map('map', { zoomControl: true }).setView([LAT, LON], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+L.marker([LAT, LON]).addTo(map).bindPopup('DS Engenharia').openPopup();
+
+// ===== Lightbox para Portfólio =====
+function openLightbox(imgSrc, title, description) {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxTitle = document.getElementById('lightbox-title');
+  const lightboxDescription = document.getElementById('lightbox-description');
+  
+  lightboxImg.src = imgSrc;
+  lightboxImg.alt = title;
+  lightboxTitle.textContent = title;
+  lightboxDescription.textContent = description;
+  
+  lightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  lightbox.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Adicionar event listeners para os cards do portfólio
+document.addEventListener('DOMContentLoaded', function() {
+  const cards = document.querySelectorAll('.card');
+  
+  cards.forEach(card => {
+    card.addEventListener('click', function() {
+      const img = card.querySelector('img');
+      const title = card.querySelector('h3').textContent;
+      const description = card.querySelector('p').textContent;
+      
+      openLightbox(img.src, title, description);
+    });
+  });
+  
+  // Event listener para o botão de fechar
+  const closeBtn = document.getElementById('lightbox-close-btn');
+  closeBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    closeLightbox();
+  });
+  
+  // Fechar lightbox ao clicar fora da imagem
+  const lightbox = document.getElementById('lightbox');
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+  
+  // Fechar lightbox com tecla ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+
+  // ===== Navegação do Portfólio =====
+  const portfolioTabs = document.querySelectorAll('.portfolio-tab');
+  const portfolioSections = document.querySelectorAll('.portfolio-section');
+
+  portfolioTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetTab = this.getAttribute('data-tab');
+      
+      // Remover classe active de todas as abas
+      portfolioTabs.forEach(t => t.classList.remove('active'));
+      // Adicionar classe active na aba clicada
+      this.classList.add('active');
+      
+      // Esconder todas as seções
+      portfolioSections.forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Mostrar a seção correspondente
+      const targetSection = document.getElementById(targetTab);
+      if (targetSection) {
+        targetSection.classList.add('active');
+        
+        // Reativar fade-in para os novos cards
+        const newCards = targetSection.querySelectorAll('.fade-item');
+        newCards.forEach(card => {
+          card.classList.remove('show');
+          observer.observe(card);
+        });
+      }
+    });
+  });
+
+  // ===== Menu Mobile =====
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const nav = document.querySelector('.nav');
+  
+  mobileMenuBtn?.addEventListener('click', function() {
+    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    
+    // Ajustar estilo do menu mobile
+    if (nav.style.display === 'flex') {
+      nav.style.position = 'absolute';
+      nav.style.top = '100%';
+      nav.style.left = '0';
+      nav.style.right = '0';
+      nav.style.background = 'rgba(255,255,255,.98)';
+      nav.style.flexDirection = 'column';
+      nav.style.padding = '20px';
+      nav.style.boxShadow = '0 4px 20px rgba(0,0,0,.1)';
+      nav.style.borderTop = '1px solid rgba(0,0,0,.1)';
+      nav.style.zIndex = '100';
+      
+      // Ajustar links do menu mobile
+      const navLinks = nav.querySelectorAll('a');
+      navLinks.forEach(link => {
+        link.style.margin = '8px 0';
+        link.style.padding = '12px 16px';
+        link.style.textAlign = 'center';
+        link.style.borderRadius = '8px';
+      });
+    }
+  });
+  
+  // Fechar menu ao clicar em um link
+  nav?.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') {
+      nav.style.display = 'none';
+    }
+  });
+
+  // ===== Botão Ver Tudo - Elétrica =====
+  const verTudoBtnEletrica = document.getElementById('ver-tudo-eletrica');
+  const fotosExtrasEletrica = document.querySelectorAll('.eletrica-extra');
+  let todasVisiveisEletrica = false;
+
+  verTudoBtnEletrica?.addEventListener('click', function() {
+    if (!todasVisiveisEletrica) {
+      // Mostrar todas as fotos
+      fotosExtrasEletrica.forEach((foto, index) => {
+        setTimeout(() => {
+          foto.style.display = 'block';
+          foto.classList.add('show');
+        }, index * 100); // Delay escalonado para efeito cascata
+      });
+      
+      // Atualizar botão
+      this.querySelector('.btn-text').textContent = 'Ver Menos';
+      this.querySelector('.btn-count').textContent = '-16 projetos';
+      this.querySelector('i').className = 'fa-solid fa-eye-slash';
+      todasVisiveisEletrica = true;
+      
+    } else {
+      // Esconder fotos extras
+      fotosExtrasEletrica.forEach((foto, index) => {
+        setTimeout(() => {
+          foto.classList.remove('show');
+          setTimeout(() => {
+            foto.style.display = 'none';
+          }, 300); // Aguarda animação terminar
+        }, index * 50);
+      });
+      
+      // Atualizar botão
+      this.querySelector('.btn-text').textContent = 'Ver Todos os Projetos';
+      this.querySelector('.btn-count').textContent = '+16 projetos';
+      this.querySelector('i').className = 'fa-solid fa-eye';
+      todasVisiveisEletrica = false;
+    }
+  });
+
+  // ===== Botão Ver Tudo - Alvenaria =====
+  const verTudoBtnAlvenaria = document.getElementById('ver-tudo-alvenaria');
+  const fotosExtrasAlvenaria = document.querySelectorAll('.alvenaria-extra');
+  let todasVisiveisAlvenaria = false;
+
+  verTudoBtnAlvenaria?.addEventListener('click', function() {
+    if (!todasVisiveisAlvenaria) {
+      // Mostrar todas as fotos
+      fotosExtrasAlvenaria.forEach((foto, index) => {
+        setTimeout(() => {
+          foto.style.display = 'block';
+          foto.classList.add('show');
+        }, index * 100); // Delay escalonado para efeito cascata
+      });
+      
+      // Atualizar botão
+      this.querySelector('.btn-text').textContent = 'Ver Menos';
+      this.querySelector('.btn-count').textContent = '-3 projetos';
+      this.querySelector('i').className = 'fa-solid fa-eye-slash';
+      todasVisiveisAlvenaria = true;
+      
+    } else {
+      // Esconder fotos extras
+      fotosExtrasAlvenaria.forEach((foto, index) => {
+        setTimeout(() => {
+          foto.classList.remove('show');
+          setTimeout(() => {
+            foto.style.display = 'none';
+          }, 300); // Aguarda animação terminar
+        }, index * 50);
+      });
+      
+      // Atualizar botão
+      this.querySelector('.btn-text').textContent = 'Ver Todos os Projetos';
+      this.querySelector('.btn-count').textContent = '+3 projetos';
+      this.querySelector('i').className = 'fa-solid fa-eye';
+      todasVisiveisAlvenaria = false;
+    }
   });
 });
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-// ===== Mapa (Leaflet, sem chave) =====
-// Ajuste as coordenadas para a sede da empresa:
-const LAT = -23.454;  // exemplo Guarulhos
-const LON = -46.533;
-
-const map = L.map('map', { zoomControl: true }).setView([LAT, LON], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap'
-}).addTo(map);
-L.marker([LAT, LON]).addTo(map).bindPopup('DS Engenharia').openPopup();

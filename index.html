@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
+  <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>DS Engenharia — Soluções Inteligentes</title>
   <meta name="description" content="DS Engenharia: projetos, consultoria e obras. Portfólio, comentários e localização." />
   <link rel="stylesheet" href="index.css" />
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Leaflet (Mapa) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-</head>
-<body>
+  </head>
+  <body>
   <!-- Header -->
   <header class="site-header">
     <div class="container header-inner">
       <img src="img/logo1.png" alt="DS Engenharia" class="logo" />
       <nav class="nav">
+        <a href="#servicos">Serviços</a>
+        <a href="#parceiros">Parceiros</a>
         <a href="#portfolio">Portfólio</a>
-        <a href="#comentarios">Comentários</a>
         <a href="#contato">Contato</a>
       </nav>
+      <button class="mobile-menu-btn" id="mobile-menu-btn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
   </header>
 
@@ -32,104 +38,390 @@
     </div>
   </section>
 
+  <!-- Serviços -->
+  <section id="servicos" class="section container">
+    <h2>Nossos Serviços</h2>
+    <p class="section-sub">Soluções completas em engenharia civil com qualidade e eficiência.</p>
+    
+    <div class="grid servicos-grid">
+      <article class="card-servico">
+        <div class="servico-icon">
+          <i class="fa-solid fa-building"></i>
+        </div>
+        <h3>Construção em Geral</h3>
+        <p>Execução completa de obras residenciais, comerciais e industriais com foco em qualidade e prazos.</p>
+      </article>
+      
+      <article class="card-servico">
+        <div class="servico-icon">
+          <i class="fa-solid fa-bricks"></i>
+        </div>
+        <h3>Alvenaria</h3>
+        <p>Parede estrutural, revestimento e soluções de alvenaria de qualidade com materiais certificados.</p>
+      </article>
+      
+      <article class="card-servico">
+        <div class="servico-icon">
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+        <h3>Reformas</h3>
+        <p>Modernização, ampliação e reparos em imóveis com projetos personalizados e execução especializada.</p>
+      </article>
+      
+      <article class="card-servico">
+        <div class="servico-icon">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h3>Instalações Elétricas</h3>
+        <p>Projetos elétricos seguros e de alto desempenho seguindo normas técnicas e padrões de qualidade.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Parceiros -->
+  <section id="parceiros" class="section container">
+    <h2>Nossos Parceiros</h2>
+    <p class="section-sub">Empresas que confiam em nossos serviços e qualidade.</p>
+    
+    <div class="parceiros-grid">
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo1.png" alt="Parceiro 1" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo2.jpg" alt="Parceiro 2" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo3.jpg" alt="Parceiro 3" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo4.webp" alt="Parceiro 4" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo5.jpg" alt="Parceiro 5" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo6.png" alt="Parceiro 6" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo7.png" alt="Parceiro 7" />
+      </div>
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo8.png" alt="Parceiro 8" />
+      </div>      
+      <div class="parceiro-item">
+        <img src="img/parceiros/logo10.png" alt="Parceiro 10" />
+      </div>
+  </section>
+
   <!-- Portfólio -->
   <section id="portfolio" class="section container">
     <h2>Portfólio</h2>
     <p class="section-sub">Seleção de obras e projetos com foco em desempenho e sustentabilidade.</p>
 
-    <div class="grid">
-      <!-- Imagens do portfólio DS Engenharia -->
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img1.jpg" alt="Projeto DS Engenharia 1" />
-        <div class="card-body">
-          <h3>Projeto Estrutural</h3>
-          <p>Estrutura metálica com otimização de cargas e prazos.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img2.jpeg" alt="Projeto DS Engenharia 2" />
-        <div class="card-body">
-          <h3>Edifício Comercial</h3>
-          <p>Eficiência energética e conforto termoacústico.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img3.jpeg" alt="Projeto DS Engenharia 3" />
-        <div class="card-body">
-          <h3>Infraestrutura Urbana</h3>
-          <p>Drenagem, pavimentação e acessibilidade.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img4.jpeg" alt="Projeto DS Engenharia 4" />
-        <div class="card-body">
-          <h3>Residencial Alto Padrão</h3>
-          <p>Projeto estrutural e gestão de obra.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img5rfr.jpeg" alt="Projeto DS Engenharia 5" />
-        <div class="card-body">
-          <h3>Obra Industrial</h3>
-          <p>Projeto e execução de estrutura industrial.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img6rfr.jpeg" alt="Projeto DS Engenharia 6" />
-        <div class="card-body">
-          <h3>Reforma Estrutural</h3>
-          <p>Modernização e reforço estrutural.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img7rfr.jpeg" alt="Projeto DS Engenharia 7" />
-        <div class="card-body">
-          <h3>Consultoria Técnica</h3>
-          <p>Análise e projeto de estruturas.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img8rfr.jpg" alt="Projeto DS Engenharia 8" />
-        <div class="card-body">
-          <h3>Gestão de Obras</h3>
-          <p>Supervisão e controle de qualidade.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img9rfr.jpg" alt="Projeto DS Engenharia 9" />
-        <div class="card-body">
-          <h3>Projeto Arquitetônico</h3>
-          <p>Design e planejamento arquitetônico.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img10rfr.jpg" alt="Projeto DS Engenharia 10" />
-        <div class="card-body">
-          <h3>Infraestrutura</h3>
-          <p>Projetos de infraestrutura urbana.</p>
-        </div>
-      </article>
-      <article class="card fade-item">
-        <img src="img/nosso portfolio/img11rfr.jpg" alt="Projeto DS Engenharia 11" />
-        <div class="card-body">
-          <h3>Construção Civil</h3>
-          <p>Execução de obras civis.</p>
-        </div>
-      </article>
+    <!-- Navegação do Portfólio -->
+    <div class="portfolio-nav">
+      <button class="portfolio-tab active" data-tab="alvenaria">
+        <i class="fa-solid fa-bricks"></i>
+        Alvenaria & Construção
+      </button>
+      <button class="portfolio-tab" data-tab="eletrica">
+        <i class="fa-solid fa-bolt"></i>
+        Instalações Elétricas
+      </button>
+    </div>
+
+    <!-- Seção Alvenaria & Construção -->
+    <div id="alvenaria" class="portfolio-section active">
+      <div class="grid">
+        <!-- Fotos iniciais (sempre visíveis) -->
+        <article class="card fade-item">
+          <img src="img/nosso portfolio/foto1.jpeg" alt="Projeto DS Engenharia 1" />
+          <div class="card-body">
+            <h3>Projeto Estrutural</h3>
+            <p>Estrutura metálica com otimização de cargas e prazos.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/nosso portfolio/foto2.jpg" alt="Projeto DS Engenharia 2" />
+          <div class="card-body">
+            <h3>Edifício Comercial</h3>
+            <p>Eficiência energética e conforto termoacústico.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/nosso portfolio/foto3.jpeg" alt="Projeto DS Engenharia 3" />
+          <div class="card-body">
+            <h3>Infraestrutura Urbana</h3>
+            <p>Drenagem, pavimentação e acessibilidade.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/nosso portfolio/foto4.jpeg" alt="Projeto DS Engenharia 4" />
+          <div class="card-body">
+            <h3>Residencial Alto Padrão</h3>
+            <p>Projeto estrutural e gestão de obra.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/nosso portfolio/foto5.jpeg" alt="Projeto DS Engenharia 5" />
+          <div class="card-body">
+            <h3>Obra Industrial</h3>
+            <p>Projeto e execução de estrutura industrial.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/nosso portfolio/foto6.jpeg" alt="Projeto DS Engenharia 6" />
+          <div class="card-body">
+            <h3>Reforma Estrutural</h3>
+            <p>Modernização e reforço estrutural.</p>
+          </div>
+        </article>
+        
+        <!-- Fotos adicionais (inicialmente escondidas) -->
+        <article class="card fade-item alvenaria-extra" style="display: none;">
+          <img src="img/nosso portfolio/foto7.jpg" alt="Projeto DS Engenharia 7" />
+          <div class="card-body">
+            <h3>Consultoria Técnica</h3>
+            <p>Análise e projeto de estruturas.</p>
+          </div>
+        </article>
+        <article class="card fade-item alvenaria-extra" style="display: none;">
+          <img src="img/nosso portfolio/foto8.jpg" alt="Projeto DS Engenharia 8" />
+          <div class="card-body">
+            <h3>Gestão de Obras</h3>
+            <p>Supervisão e controle de qualidade.</p>
+          </div>
+        </article>
+        <article class="card fade-item alvenaria-extra" style="display: none;">
+          <img src="img/nosso portfolio/foto9.jpg" alt="Projeto DS Engenharia 9" />
+          <div class="card-body">
+            <h3>Construção Civil</h3>
+            <p>Execução de obras civis e projetos arquitetônicos.</p>
+          </div>
+        </article>
+      </div>
+      
+      <!-- Botão Ver Tudo -->
+      <div class="ver-tudo-container">
+        <button class="ver-tudo-btn" id="ver-tudo-alvenaria">
+          <i class="fa-solid fa-eye"></i>
+          <span class="btn-text">Ver Todos os Projetos</span>
+          <span class="btn-count">+3 projetos</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Seção Instalações Elétricas -->
+    <div id="eletrica" class="portfolio-section">
+      <div class="grid">
+        <!-- Fotos iniciais (sempre visíveis) -->
+        <article class="card fade-item">
+          <img src="img/Elétrica/foto1.jpeg" alt="Projeto Elétrico 1" />
+          <div class="card-body">
+            <h3>Instalação Residencial</h3>
+            <p>Projeto elétrico completo para residência unifamiliar.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/Elétrica/foto2.jpeg" alt="Projeto Elétrico 2" />
+          <div class="card-body">
+            <h3>Sistema Industrial</h3>
+            <p>Instalação elétrica para ambiente industrial.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/Elétrica/foto3.jpeg" alt="Projeto Elétrico 3" />
+          <div class="card-body">
+            <h3>Comercial & Escritórios</h3>
+            <p>Projeto elétrico para edifícios comerciais.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/Elétrica/foto4.jpeg" alt="Projeto Elétrico 4" />
+          <div class="card-body">
+            <h3>Automação Residencial</h3>
+            <p>Sistemas inteligentes e automação doméstica.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/Elétrica/foto5.jpeg" alt="Projeto Elétrico 5" />
+          <div class="card-body">
+            <h3>Energia Solar</h3>
+            <p>Instalação de sistemas fotovoltaicos.</p>
+          </div>
+        </article>
+        <article class="card fade-item">
+          <img src="img/Elétrica/foto6.jpeg" alt="Projeto Elétrico 6" />
+          <div class="card-body">
+            <h3>Manutenção Preventiva</h3>
+            <p>Serviços de manutenção elétrica especializada.</p>
+          </div>
+        </article>
+        
+        <!-- Fotos adicionais (inicialmente escondidas) -->
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto7.jpeg" alt="Projeto Elétrico 7" />
+          <div class="card-body">
+            <h3>Quadros Elétricos</h3>
+            <p>Instalação e manutenção de quadros de distribuição.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto8.jpeg" alt="Projeto Elétrico 8" />
+          <div class="card-body">
+            <h3>Iluminação LED</h3>
+            <p>Projetos de iluminação eficiente e sustentável.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto9.jpeg" alt="Projeto Elétrico 9" />
+          <div class="card-body">
+            <h3>Cabeamento Estruturado</h3>
+            <p>Infraestrutura de redes e telecomunicações.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto10.jpeg" alt="Projeto Elétrico 10" />
+          <div class="card-body">
+            <h3>Instalação Predial</h3>
+            <p>Sistemas elétricos para edifícios residenciais.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto11.jpeg" alt="Projeto Elétrico 11" />
+          <div class="card-body">
+            <h3>Subestação Elétrica</h3>
+            <p>Projetos de subestações e distribuição de energia.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto12.jpeg" alt="Projeto Elétrico 12" />
+          <div class="card-body">
+            <h3>SPDA - Para-raios</h3>
+            <p>Sistema de proteção contra descargas atmosféricas.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto13.jpeg" alt="Projeto Elétrico 13" />
+          <div class="card-body">
+            <h3>Automação Industrial</h3>
+            <p>Sistemas de automação para indústrias.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto14.jpeg" alt="Projeto Elétrico 14" />
+          <div class="card-body">
+            <h3>Instalação Hospitalar</h3>
+            <p>Sistemas elétricos para ambientes hospitalares.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto15.jpeg" alt="Projeto Elétrico 15" />
+          <div class="card-body">
+            <h3>Data Center</h3>
+            <p>Infraestrutura elétrica para centros de dados.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto16.jpeg" alt="Projeto Elétrico 16" />
+          <div class="card-body">
+            <h3>Instalação Comercial</h3>
+            <p>Sistemas elétricos para estabelecimentos comerciais.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto17.jpeg" alt="Projeto Elétrico 17" />
+          <div class="card-body">
+            <h3>Projeto de Iluminação</h3>
+            <p>Projetos luminotécnicos especializados.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto18.jpeg" alt="Projeto Elétrico 18" />
+          <div class="card-body">
+            <h3>Instalação Rural</h3>
+            <p>Sistemas elétricos para propriedades rurais.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto19.jpeg" alt="Projeto Elétrico 19" />
+          <div class="card-body">
+            <h3>Manutenção Corretiva</h3>
+            <p>Serviços de reparo e correção de instalações.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto20.jpeg" alt="Projeto Elétrico 20" />
+          <div class="card-body">
+            <h3>Instalação de Emergência</h3>
+            <p>Sistemas de iluminação e energia de emergência.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto21.jpeg" alt="Projeto Elétrico 21" />
+          <div class="card-body">
+            <h3>Projeto Executivo</h3>
+            <p>Projetos executivos detalhados para execução.</p>
+          </div>
+        </article>
+        <article class="card fade-item eletrica-extra" style="display: none;">
+          <img src="img/Elétrica/foto22.jpeg" alt="Projeto Elétrico 22" />
+          <div class="card-body">
+            <h3>Consultoria Técnica</h3>
+            <p>Consultoria especializada em sistemas elétricos.</p>
+          </div>
+        </article>
+      </div>
+      
+      <!-- Botão Ver Tudo -->
+      <div class="ver-tudo-container">
+        <button class="ver-tudo-btn" id="ver-tudo-eletrica">
+          <i class="fa-solid fa-eye"></i>
+          <span class="btn-text">Ver Todos os Projetos</span>
+          <span class="btn-count">+16 projetos</span>
+        </button>
+      </div>
     </div>
   </section>
 
-  <!-- Comentários (Firestore) -->
-  <section id="comentarios" class="section container">
-    <h2>Deixe seu comentário</h2>
-    <form id="comment-form" class="comment-form">
-      <input id="nome" type="text" placeholder="Seu nome" required />
-      <textarea id="texto" rows="3" placeholder="Escreva seu comentário..." required></textarea>
-      <button class="btn" type="submit">Enviar</button>
+  <!-- Entre em Contato -->
+  <section id="contato" class="section container">
+    <h2>Entre em Contato Conosco</h2>
+    <p class="section-sub">Tem alguma dúvida ou precisa de um orçamento? Entre em contato conosco!</p>
+    
+    <form id="contact-form" class="contact-form">
+      <div class="form-row">
+        <input type="text" id="nome" placeholder="Seu nome completo" required />
+        <input type="tel" id="telefone" placeholder="Seu telefone/WhatsApp" required />
+      </div>
+      <input type="email" id="email" placeholder="Seu e-mail" required />
+      <textarea id="mensagem" placeholder="Sua mensagem ou descrição do projeto" rows="5" required></textarea>
+      <button class="btn" type="submit">Enviar Mensagem</button>
       <span id="form-status" class="muted"></span>
     </form>
-
-    <ul id="comments-list" class="comments"></ul>
+    
+    <!-- FAQ -->
+    <div class="faq-section">
+      <h3>Perguntas Frequentes</h3>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h4>Quanto tempo leva um projeto?</h4>
+          <p>O prazo varia conforme a complexidade do projeto. Projetos residenciais simples podem levar de 15 a 30 dias, enquanto projetos comerciais podem levar de 60 a 120 dias.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Vocês fazem orçamento gratuito?</h4>
+          <p>Sim! Oferecemos orçamento gratuito e sem compromisso. Entre em contato conosco para agendar uma visita técnica.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Qual a área de atendimento?</h4>
+          <p>Atendemos toda a Grande São Paulo e região metropolitana. Para outras localidades, consulte-nos sobre a possibilidade de atendimento.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Vocês têm garantia nos serviços?</h4>
+          <p>Sim! Oferecemos garantia de 1 ano para serviços de construção e 2 anos para projetos estruturais, conforme normas técnicas.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Rodapé com mapa -->
@@ -138,13 +430,26 @@
     <div class="footer-info">
       <p><strong>DS Projetos e Construções LTDA</strong></p>
       <p>CNPJ: 56.225.981/0001-20</p>
-      <p>Tel: (11) 94620-1853 / 99441-6768</p>
-      <p>Email: dsilvaprojjetoseconstrucoes@gmail.com</p>
+      <p>Tel: (11) 99441-6768 / 94523-7802</p>
+      <p>Email: dsilvaprojetoseconstrucoes@gmail.com
+      </p>
     </div>
   </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightbox-close-btn">&times;</button>
+      <img id="lightbox-img" src="" alt="">
+      <div class="lightbox-info">
+        <h3 id="lightbox-title"></h3>
+        <p id="lightbox-description"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts (tipo módulo) -->
   <script type="module" src="index.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-</body>
+  </body>
 </html>
