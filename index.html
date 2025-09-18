@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DS Engenharia — Soluções Inteligentes</title>
+  <meta name="description" content="DS Engenharia: projetos, consultoria e obras. Portfólio, comentários e localização." />
+  <link rel="stylesheet" href="index.css" />
+  <!-- Leaflet (Mapa) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <img src="img/logo1.png" alt="DS Engenharia" class="logo" />
+      <nav class="nav">
+        <a href="#portfolio">Portfólio</a>
+        <a href="#comentarios">Comentários</a>
+        <a href="#contato">Contato</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero com 3D -->
+  <section class="hero">
+    <canvas id="three-canvas" aria-label="Animação 3D de estruturas DS Engenharia"></canvas>
+    <div class="hero-copy">
+      <h1>DS Engenharia</h1>
+      <p>Soluções inteligentes, resultados sustentáveis.</p>
+      <a class="btn" href="#portfolio">Ver Portfólio</a>
+    </div>
+  </section>
+
+  <!-- Portfólio -->
+  <section id="portfolio" class="section container">
+    <h2>Portfólio</h2>
+    <p class="section-sub">Seleção de obras e projetos com foco em desempenho e sustentabilidade.</p>
+
+    <div class="grid">
+      <!-- Imagens do portfólio DS Engenharia -->
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img1.jpg" alt="Projeto DS Engenharia 1" />
+        <div class="card-body">
+          <h3>Projeto Estrutural</h3>
+          <p>Estrutura metálica com otimização de cargas e prazos.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img2.jpeg" alt="Projeto DS Engenharia 2" />
+        <div class="card-body">
+          <h3>Edifício Comercial</h3>
+          <p>Eficiência energética e conforto termoacústico.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img3.jpeg" alt="Projeto DS Engenharia 3" />
+        <div class="card-body">
+          <h3>Infraestrutura Urbana</h3>
+          <p>Drenagem, pavimentação e acessibilidade.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img4.jpeg" alt="Projeto DS Engenharia 4" />
+        <div class="card-body">
+          <h3>Residencial Alto Padrão</h3>
+          <p>Projeto estrutural e gestão de obra.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img5rfr.jpeg" alt="Projeto DS Engenharia 5" />
+        <div class="card-body">
+          <h3>Obra Industrial</h3>
+          <p>Projeto e execução de estrutura industrial.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img6rfr.jpeg" alt="Projeto DS Engenharia 6" />
+        <div class="card-body">
+          <h3>Reforma Estrutural</h3>
+          <p>Modernização e reforço estrutural.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img7rfr.jpeg" alt="Projeto DS Engenharia 7" />
+        <div class="card-body">
+          <h3>Consultoria Técnica</h3>
+          <p>Análise e projeto de estruturas.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img8rfr.jpg" alt="Projeto DS Engenharia 8" />
+        <div class="card-body">
+          <h3>Gestão de Obras</h3>
+          <p>Supervisão e controle de qualidade.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img9rfr.jpg" alt="Projeto DS Engenharia 9" />
+        <div class="card-body">
+          <h3>Projeto Arquitetônico</h3>
+          <p>Design e planejamento arquitetônico.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img10rfr.jpg" alt="Projeto DS Engenharia 10" />
+        <div class="card-body">
+          <h3>Infraestrutura</h3>
+          <p>Projetos de infraestrutura urbana.</p>
+        </div>
+      </article>
+      <article class="card fade-item">
+        <img src="img/nosso portfolio/img11rfr.jpg" alt="Projeto DS Engenharia 11" />
+        <div class="card-body">
+          <h3>Construção Civil</h3>
+          <p>Execução de obras civis.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Comentários (Firestore) -->
+  <section id="comentarios" class="section container">
+    <h2>Deixe seu comentário</h2>
+    <form id="comment-form" class="comment-form">
+      <input id="nome" type="text" placeholder="Seu nome" required />
+      <textarea id="texto" rows="3" placeholder="Escreva seu comentário..." required></textarea>
+      <button class="btn" type="submit">Enviar</button>
+      <span id="form-status" class="muted"></span>
+    </form>
+
+    <ul id="comments-list" class="comments"></ul>
+  </section>
+
+  <!-- Rodapé com mapa -->
+  <footer id="contato" class="site-footer">
+    <div id="map"></div>
+    <div class="footer-info">
+      <p><strong>DS Projetos e Construções LTDA</strong></p>
+      <p>CNPJ: 56.225.981/0001-20</p>
+      <p>Tel: (11) 94620-1853 / 99441-6768</p>
+      <p>Email: dsilvaprojjetoseconstrucoes@gmail.com</p>
+    </div>
+  </footer>
+
+  <!-- Scripts (tipo módulo) -->
+  <script type="module" src="index.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+</html>
