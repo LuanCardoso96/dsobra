@@ -270,15 +270,6 @@
     box-shadow:0 4px 20px rgba(0,0,0,.1);
     position:relative; overflow:hidden;
   }
-  .card-servico::before{
-    content:''; position:absolute;
-    top:0; left:0; right:0; bottom:0;
-    background:url('img/logo1.png') center/cover;
-    opacity:0.03; z-index:0;
-  }
-  .card-servico > *{
-    position:relative; z-index:1;
-  }
   .card-servico:hover{
     transform:translateY(-8px) scale(1.02);
     box-shadow:0 25px 50px rgba(0,0,0,.2);
@@ -359,17 +350,17 @@
   
   /* Parceiros */
   .parceiros-grid{
-    display:grid; gap:14px;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    display:grid; gap:12px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     align-items:center; justify-items:center;
-    max-width:1500px; margin:0 auto;
+    max-width:1600px; margin:0 auto;
   }
   .parceiro-item{
     background:linear-gradient(135deg, var(--card), var(--card-2));
     border:1px solid rgba(0,0,0,.1);
-    border-radius:16px; padding:14px;
+    border-radius:16px; padding:12px;
     transition:all .4s ease;
-    width:100%; max-width:150px;
+    width:100%; max-width:140px;
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 4px 20px rgba(0,0,0,.1);
   }
@@ -531,23 +522,17 @@
       gap:20px;
     }
     .parceiros-grid{
-      grid-template-columns:repeat(4, 1fr);
-      gap:10px;
+      grid-template-columns:repeat(5, 1fr);
+      gap:8px;
+    }
+    .parceiro-item{
+      padding:10px; max-width:120px;
     }
     
     /* Cards */
     .card{
       border-radius:12px;
       position:relative; overflow:hidden;
-    }
-    .card::before{
-      content:''; position:absolute;
-      top:0; left:0; right:0; bottom:0;
-      background:url('img/logo1.png') center/cover;
-      opacity:0.35; z-index:15;
-    }
-    .card > *{
-      position:relative; z-index:1;
     }
     .card img{
       height:200px;
@@ -675,8 +660,11 @@
     }
     
     .parceiros-grid{
-      grid-template-columns:repeat(4, 1fr);
+      grid-template-columns:repeat(5, 1fr);
       gap:6px;
+    }
+    .parceiro-item{
+      padding:8px; max-width:100px;
     }
     
     .card img{
