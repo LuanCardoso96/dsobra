@@ -124,12 +124,9 @@ verTudoBtnAlvenaria?.addEventListener('click', function() {
 
 ### 🎨 Logos Organizados:
 1. **logo1.png** - Parceiro 1
-2. **logo2.jpg** - Parceiro 2
-3. **logo3.jpg** - Parceiro 3
 4. **logo4.webp** - Parceiro 4
 5. **logo5.jpg** - Parceiro 5
 6. **logo6.png** - Parceiro 6
-7. **logo7.png** - Parceiro 7
 8. **logo8.png** - Parceiro 8 ✨ **NOVO**
 9. **logo9.jpg** - Parceiro 9 ✨ **NOVO**
 

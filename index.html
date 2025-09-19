@@ -6,6 +6,11 @@
   <title>DS Engenharia — Soluções Inteligentes</title>
   <meta name="description" content="DS Engenharia: projetos, consultoria e obras. Portfólio, comentários e localização." />
   <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="servicos.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Leaflet (Mapa) -->
@@ -21,7 +26,7 @@
           <div class="contact-info">
             <span class="contact-item">
               <i class="fa-solid fa-phone"></i>
-              <span>(11) 99441-6768</span>
+              <span>(11) 94620-1853</span>
             </span>
             <span class="contact-item">
               <i class="fa-solid fa-envelope"></i>
@@ -47,7 +52,9 @@
     <div class="main-header">
       <div class="container header-inner">
         <div class="logo-section">
-          <img src="img/logo1.png" alt="DS Engenharia" class="logo" />
+          <div class="logo-container">
+            <img src="img/logo1.png" alt="DS Engenharia" class="logo" />
+          </div>
           <div class="logo-text">
             <h1 class="company-name">DS Engenharia</h1>
             <p class="company-tagline">Projetos e Construções</p>
@@ -88,42 +95,48 @@
   </section>
 
   <!-- Serviços -->
-  <section id="servicos" class="section container">
-    <h2>Nossos Serviços</h2>
-    <p class="section-sub">Soluções completas em engenharia civil com qualidade e eficiência.</p>
-    
-    <div class="grid servicos-grid">
-      <article class="card-servico">
-        <div class="servico-icon">
-          <i class="fa-solid fa-building"></i>
-        </div>
-        <h3>Construção em Geral</h3>
-        <p>Execução completa de obras residenciais e comerciais com foco em qualidade e prazos.</p>
-      </article>
-      
-      <article class="card-servico">
-        <div class="servico-icon">
-          <i class="fa-solid fa-bricks"></i>
-        </div>
-        <h3>Alvenaria</h3>
-        <p>Parede estrutural, revestimento e soluções de alvenaria de qualidade com materiais certificados.</p>
-      </article>
-      
-      <article class="card-servico">
-        <div class="servico-icon">
-          <i class="fa-solid fa-house-chimney"></i>
-        </div>
-        <h3>Reformas</h3>
-        <p>Modernização, ampliação e reparos em imóveis com projetos personalizados e execução especializada.</p>
-      </article>
-      
-      <article class="card-servico">
-        <div class="servico-icon">
-          <i class="fa-solid fa-bolt"></i>
-        </div>
-        <h3>Instalações Elétricas</h3>
-        <p>Projetos elétricos seguros e de alto desempenho seguindo normas técnicas e padrões de qualidade.</p>
-      </article>
+  <section id="servicos" class="svc-wrapper">
+    <div class="svc-container">
+      <h2 class="svc-title">Nossos Serviços</h2>
+      <p class="svc-subtitle">Soluções completas em engenharia civil com qualidade e eficiência.</p>
+
+      <!-- GRID FIXA DE CARDS (independe de JS) -->
+      <div class="svc-grid">
+        <article class="svc-card" data-slug="construcao-geral" tabindex="0" aria-label="Construção em Geral">
+          <div class="svc-card-icon"><img src="img/nossos-servicos/icon-predio.svg" alt=""></div>
+          <h3 class="svc-card-title">Construção em Geral</h3>
+          <p class="svc-card-desc">Execução completa de obras residenciais e comerciais com foco em qualidade e prazos.</p>
+        </article>
+
+        <article class="svc-card" data-slug="reformas" tabindex="0" aria-label="Reformas">
+          <div class="svc-card-icon"><img src="img/nossos-servicos/icon-casa.svg" alt=""></div>
+          <h3 class="svc-card-title">Reformas</h3>
+          <p class="svc-card-desc">Modernização, ampliação e reparos com execução especializada.</p>
+        </article>
+
+        <article class="svc-card" data-slug="instalacoes-eletricas" tabindex="0" aria-label="Instalações Elétricas">
+          <div class="svc-card-icon"><img src="img/nossos-servicos/icon-raio.svg" alt=""></div>
+          <h3 class="svc-card-title">Instalações Elétricas</h3>
+          <p class="svc-card-desc">Projetos seguros e de alto desempenho seguindo normas técnicas.</p>
+        </article>
+
+        <article class="svc-card" data-slug="combate-incendio" tabindex="0" aria-label="Instalação e Combate a Incêndio">
+          <div class="svc-card-icon"><img src="img/nossos-servicos/icon-incendio.svg" alt=""></div>
+          <h3 class="svc-card-title">Instalação e Combate a Incêndio</h3>
+          <p class="svc-card-desc">Sistemas de prevenção e combate com ART e conformidade ao Corpo de Bombeiros.</p>
+        </article>
+      </div>
+    </div>
+
+    <!-- MODAL (isolado para não conflitar com seu lightbox) -->
+    <div class="svc-modal" id="servicoModal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="svc-modal-backdrop" data-close></div>
+      <div class="svc-modal-content" role="document" tabindex="-1">
+        <button class="svc-modal-close" id="modalFechar" aria-label="Fechar (Esc)">×</button>
+        <img id="modalImg" alt="" class="svc-modal-img" />
+        <h3 id="modalTitulo" class="svc-modal-title"></h3>
+        <p id="modalDescricao" class="svc-modal-desc"></p>
+      </div>
     </div>
   </section>
 
@@ -145,7 +158,7 @@
         <div class="especialidade-icon">
           <i class="fa-solid fa-hammer"></i>
         </div>
-        <h3>Reformas Personalizadas</h3>
+        <h3>Reformas Especializadas</h3>
         <p>Transformação de espaços com soluções criativas e funcionais, respeitando suas necessidades.</p>
       </div>
       
@@ -185,8 +198,24 @@
         <div class="especialidade-icon">
           <i class="fa-solid fa-clipboard-list"></i>
         </div>
-        <h3>Gerenciamento de Projeto</h3>
+        <h3>Gerenciamento de Serviços</h3>
         <p>Coordenação completa de obras com planejamento, execução e controle de qualidade.</p>
+      </div>
+      
+      <div class="especialidade-item">
+        <div class="especialidade-icon">
+          <i class="fa-solid fa-camera"></i>
+        </div>
+        <h3>CFTV & Monitoramento 24h</h3>
+        <p>Câmeras IP, NVR/DVR, acesso remoto e analytics para segurança contínua.</p>
+      </div>
+      
+      <div class="especialidade-item">
+        <div class="especialidade-icon">
+          <i class="fa-solid fa-id-card"></i>
+        </div>
+        <h3>Controle de Acesso & Interfonia</h3>
+        <p>Biometria, cartão/tag, fechaduras e vídeo-porteiro integrados à automação.</p>
       </div>
     </div>
   </section>
@@ -231,12 +260,6 @@
         <img src="img/parceiros/logo1.png" alt="Parceiro 1" />
       </div>
       <div class="parceiro-item">
-        <img src="img/parceiros/logo2.jpg" alt="Parceiro 2" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo3.jpg" alt="Parceiro 3" />
-      </div>
-      <div class="parceiro-item">
         <img src="img/parceiros/logo4.webp" alt="Parceiro 4" />
       </div>
       <div class="parceiro-item">
@@ -246,25 +269,10 @@
         <img src="img/parceiros/logo6.png" alt="Parceiro 6" />
       </div>
       <div class="parceiro-item">
-        <img src="img/parceiros/logo7.png" alt="Parceiro 7" />
-      </div>
-      <div class="parceiro-item">
         <img src="img/parceiros/logo8.png" alt="Parceiro 8" />
       </div>
       <div class="parceiro-item">
         <img src="img/parceiros/logo9.jpg" alt="Parceiro 9" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo10.png" alt="Parceiro 10" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo11.png" alt="Parceiro 11" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo12.jpg" alt="Parceiro 12" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo13.png" alt="Parceiro 13" />
       </div>
       <div class="parceiro-item">
         <img src="img/parceiros/logo14.png" alt="Parceiro 14" />
@@ -274,30 +282,6 @@
       </div>
       <div class="parceiro-item">
         <img src="img/parceiros/logo16.png" alt="Parceiro 16" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo17.png" alt="Parceiro 17" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo18.jpg" alt="Parceiro 18" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo19.jpg" alt="Parceiro 19" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo20.jpg" alt="Parceiro 20" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo21.webp" alt="Parceiro 21" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo22.jpg" alt="Parceiro 22" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo23.png" alt="Parceiro 23" />
-      </div>
-      <div class="parceiro-item">
-        <img src="img/parceiros/logo24.jpg" alt="Parceiro 24" />
       </div>
   </section>
 
@@ -658,10 +642,10 @@
           <ul class="footer-links">
             <li>Construção Residencial</li>
             <li>Construção Comercial</li>
-            <li>Reformas Personalizadas</li>
+            <li>Reformas Especialidades</li>
             <li>Instalações Elétricas</li>
             <li>Energia Solar</li>
-            <li>Gerenciamento de Projetos</li>
+            <li>Gerenciamento de Serviços</li>
           </ul>
         </div>
 
@@ -743,6 +727,7 @@
 
   <!-- Scripts (tipo módulo) -->
   <script type="module" src="index.js"></script>
+  <script defer src="servicos.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </body>
 </html>

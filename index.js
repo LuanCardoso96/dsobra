@@ -321,19 +321,10 @@ document.addEventListener('DOMContentLoaded', function() {
     link.addEventListener('click', function() {
       // Verificar se é um link âncora (começa com #)
       if (this.getAttribute('href').startsWith('#')) {
-        closeMobileMenu();
-        
-        // Scroll suave para a seção
-        const targetId = this.getAttribute('href').substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          setTimeout(() => {
-            targetElement.scrollIntoView({ 
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }, 100);
-        }
+        // Fechar menu mobile após iniciar o scroll
+        setTimeout(() => {
+          closeMobileMenu();
+        }, 100);
       }
     });
   });
@@ -345,10 +336,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Fechar menu ao clicar em um link
-  nav?.addEventListener('click', function(e) {
-    if (e.target.tagName === 'A') {
-      nav.style.display = 'none';
+  // Removido código problemático que fechava menu imediatamente
+
+  // ===== Navegação por Âncora Global =====
+  // Handler para todos os links de âncora (desktop e mobile)
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a[href^="#"]');
+    if (link && link.getAttribute('href') !== '#') {
+      e.preventDefault();
+      
+      const targetId = link.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        const header = document.querySelector('.site-header');
+        const headerHeight = header ? header.offsetHeight : 0;
+        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+        
+        // Scroll suave com offset
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
   });
 
