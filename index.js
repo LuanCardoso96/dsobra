@@ -524,3 +524,42 @@ document.addEventListener('DOMContentLoaded', function() {
   // Verificar estado inicial
   toggleScrollArrows();
 });
+
+// Modal de Expansão de Imagem do Portfólio
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('portfolioModal');
+  const modalImg = document.getElementById('portfolioModalImg');
+  const modalClose = document.getElementById('portfolioModalClose');
+  const modalBackdrop = modal.querySelector('.portfolio-modal-backdrop');
+  const portfolioCards = document.querySelectorAll('.portfolio-card');
+
+  // Abrir modal ao clicar em uma imagem do portfólio
+  portfolioCards.forEach(card => {
+    const img = card.querySelector('img');
+    if (img) {
+      img.addEventListener('click', function() {
+        modalImg.src = this.src;
+        modalImg.alt = this.alt;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Previne scroll da página
+      });
+    }
+  });
+
+  // Fechar modal
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = ''; // Restaura scroll da página
+  }
+
+  // Event listeners para fechar modal
+  modalClose.addEventListener('click', closeModal);
+  modalBackdrop.addEventListener('click', closeModal);
+
+  // Fechar com tecla ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+});
